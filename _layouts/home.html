@@ -1,0 +1,91 @@
+---
+layout: page
+---
+
+{{ content }}
+
+{% assign posts = paginator.posts | default: site.posts %}
+
+<!-- role="list" needed so that `list-style: none` in Safari doesn't remove the list semantics -->
+<ul class="posts-list list-unstyled" role="list">
+  {% for post in posts %}
+  <li class="post-preview">
+    <article>
+
+      {%- capture thumbnail -%}
+        {% if post.thumbnail-img %}
+          {{ post.thumbnail-img }}
+        {% elsif post.cover-img %}
+          {% if post.cover-img.first %}
+            {{ post.cover-img[0].first.first }}
+          {% else %}
+            {{ post.cover-img }}
+          {% endif %}
+        {% else %}
+        {% endif %}
+      {% endcapture %}
+      {% assign thumbnail=thumbnail | strip %}
+
+      {% if site.feed_show_excerpt == false %}
+      {% if thumbnail != "" %}
+      <div class="post-image post-image-normal">
+        <img src="{{ thumbnail | absolute_url }}" alt="Post thumbnail">
+      </div>
+      {% endif %}
+      {% endif %}
+
+      <h2 class="post-title">{{ post.title | strip_html }}</h2>
+      {% if post.subtitle %}
+        <h3 class="post-subtitle">
+        {{ post.subtitle | strip_html }}
+        </h3>
+      {% endif %}
+
+      {% if thumbnail != "" %}
+      <div class="post-image post-image-small">
+        <img src="{{ thumbnail | absolute_url }}" alt="Post thumbnail">
+      </div>
+      {% endif %}
+
+      {% unless site.feed_show_excerpt == false %}
+      {% if thumbnail != "" %}
+      <div class="post-image post-image-short">
+        <a href="{{ post.url | absolute_url }}" aria-label="Thumbnail">
+          <img src="{{ thumbnail | absolute_url }}" alt="Post thumbnail">
+        </a>
+      </div>
+      {% endif %}
+      {% endunless %}
+
+      <div class="post-buttons">
+        <a href="{{ post.publi_link }}" class="btn btn-primary" target="_blank">PDF</a>
+        {% if post.video_path%}
+          <a href="{{ site.url }}/{{ post.video_path }}" class="btn btn-primary" target="_blank">Video</a>
+        {% endif %}
+      </div>
+
+    </article>
+  </li>
+  {% endfor %}
+</ul>
+
+{% if paginator.total_pages > 1 %}
+<ul class="pagination main-pager">
+  {% if paginator.previous_page %}
+  <li class="page-item previous">
+    <a class="page-link" href="{{ paginator.previous_page_path | absolute_url }}">
+      <i class="fas fa-arrow-left" alt="Newer Posts"></i>
+      <span class="d-none d-sm-inline-block">Newer Posts</span>
+    </a>
+  </li>
+  {% endif %}
+  {% if paginator.next_page %}
+  <li class="page-item next">
+    <a class="page-link" href="{{ paginator.next_page_path | absolute_url }}">
+      <span class="d-none d-sm-inline-block">Older Posts</span>
+      <i class="fas fa-arrow-right" alt="Older Posts"></i>
+    </a>
+  </li>
+  {% endif %}
+</ul>
+{% endif %}
