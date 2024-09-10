@@ -1,5 +1,5 @@
 {% if site.social-network-links %}
-<ul class="list-inline text-center footer-links">
+<ul class="list-inline text-center social-icons">
 
 {%- for network in site.social-network-links -%}
 
@@ -63,18 +63,6 @@
   </li>
   {%- endif -%}
 
-  {%- if network[0] == "xing" -%}
-  <li class="list-inline-item">
-    <a href="https://www.xing.com/profile/{{ network[1] }}" title="Xing">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-xing fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Xing</span>
-   </a>
-  </li>
-  {%- endif -%}
-
   {%- if network[0] == "stackoverflow" -%}
   <li class="list-inline-item">
     <a href="https://stackoverflow.com/users/{{ network[1] }}" title="StackOverflow">
@@ -84,126 +72,6 @@
       </span>
       <span class="sr-only">StackOverflow</span>
    </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "snapchat" -%}
-  <li class="list-inline-item">
-    <a href="https://www.snapchat.com/add/{{ network[1] }}" title="Snapchat">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-snapchat-ghost fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Snapchat</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "instagram" -%}
-  <li class="list-inline-item">
-    <a href="https://www.instagram.com/{{ network[1] }}" title="Instagram">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-instagram fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Instagram</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "youtube" -%}
-  <li class="list-inline-item">
-    <a href="https://www.youtube.com/{{ network[1] }}" title="YouTube">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-youtube fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">YouTube</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "spotify" -%}
-  <li class="list-inline-item">
-    <a href="https://open.spotify.com/user/{{ network[1] }}" title="Spotify">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-spotify fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Spotify</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "telephone" -%}
-  <li class="list-inline-item">
-    <a href="tel:{{ network[1] }}" title="Phone">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fas fa-phone fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Phone</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "steam" -%}
-  <li class="list-inline-item">
-    <a href="https://steamcommunity.com/id/{{ network[1] }}" title="Steam">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-steam fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Steam</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "twitch" -%}
-  <li class="list-inline-item">
-    <a href="https://www.twitch.tv/{{ network[1] }}" title="Twitch">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-twitch fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Twitch</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "yelp" -%}
-  <li class="list-inline-item">
-    <a href="https://yelp.com/{{ network[1] }}" title="Yelp">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-yelp fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Yelp</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "mastodon" -%}
-  <li class="list-inline-item">
-    <a rel="me" href="https://{{ network[1] }}" title="Mastodon">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-mastodon fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Mastodon</span>
-    </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "bluesky" -%}
-  <li class="list-inline-item">
-    <a rel="me" href="https://bsky.app/profile/{{ network[1] }}" title="Bluesky">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fas fa-square fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Bluesky</span>
-    </a>
   </li>
   {%- endif -%}
 
@@ -255,33 +123,6 @@
   </li>
   {%- endif -%}
 
-  {%- if network[0] == "itchio" -%}
-  <li class="list-inline-item">
-    <a href="https://{{ network[1] }}.itch.io/" title="Itchio">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-itch-io fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Itchio</span>
-   </a>
-  </li>
-  {%- endif -%}
-  
-  {%- if network[0] == "discord" -%}
-  {% assign discord_start = network[1] | split: "/" | first -%}
-  {% unless discord_start == 'users' or discord_start == 'invite' -%}
-    {% assign discord_url_prefix = 'invite/' -%}
-  {% endunless -%}
-  <li class="list-inline-item">
-    <a href="https://discord.com/{{discord_url_prefix}}{{network[1]}}" title="Discord">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-discord fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Discord</span>
-   </a>
-  </li>
-  {%- endif -%}
   
   {%- if network[0] == "kaggle" -%}
   <li class="list-inline-item">
@@ -303,18 +144,6 @@
         <i class="fab fa-hackerrank fa-stack-1x fa-inverse"></i>
       </span>
       <span class="sr-only">Hackerrank</span>
-   </a>
-  </li>
-  {%- endif -%}
-
-  {%- if network[0] == "untappd" -%}
-  <li class="list-inline-item">
-    <a href="https://untappd.com/user/{{ network[1] }}" title="Untappd">
-      <span class="fa-stack fa-lg" aria-hidden="true">
-        <i class="fas fa-circle fa-stack-2x"></i>
-        <i class="fab fa-untappd fa-stack-1x fa-inverse"></i>
-      </span>
-      <span class="sr-only">Untappd</span>
    </a>
   </li>
   {%- endif -%}
