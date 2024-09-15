@@ -420,7 +420,7 @@ img {
 }
 
 .social-icons .fa-stack {
-  font-size: 0.85rem; /* Adjust the overall size of the icons */
+  font-size: 1.25rem; /* Adjust the overall size of the icons */
 }
 
 /* Custom styles for the social media icons */
@@ -1186,7 +1186,7 @@ pre {
 .profile-picture img {
   width: 100%; /* This ensures the image scales with the container */
   height: auto; /* Maintains the aspect ratio */
-  max-width: 150px; /* Ensures the image doesn't exceed the container size */
+  max-width: 175px; /* Ensures the image doesn't exceed the container size */
   border-radius: 50%; /* Keeps the image circular */
   margin-bottom: 15px;
 }
@@ -1199,7 +1199,7 @@ pre {
   text-align: left; /* Aligns the text to the left side */
 }
 
-.experience-section h3, .education-section h3 {
+.experience-section h3, .education-section h3, .other-section h3 {
   color: #367588; /* Consistent color theme */
   font-size: 1.25rem;
   margin-bottom: 10px;
