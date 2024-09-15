@@ -1215,3 +1215,13 @@ pre {
   margin-bottom: 8px;     /* Adds space between list items */
   color: #404040;         /* Gray text color for consistency */
 }
+
+.custom-link {
+  color: inherit; /* Inherit the text color from the parent element */
+  text-decoration: underline; /* Keep the underline */
+}
+
+.custom-link:hover {
+  color: inherit; /* Optional: keep the same color on hover */
+  text-decoration: underline; /* Keep the underline on hover */
+}
