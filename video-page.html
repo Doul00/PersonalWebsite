@@ -1,0 +1,43 @@
+---
+layout: video
+title: Video Page
+permalink: /video-page/
+---
+
+<video id="video-player" width="640" height="360" controls>
+  <source id="video-source" src="" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<script>
+  // Function to get query parameters
+  function getQueryParams() {
+    const params = {};
+    const queryString = window.location.search.slice(1);
+    const pairs = queryString.split("&");
+
+    pairs.forEach(function(pair) {
+      const [key, value] = pair.split("=");
+      params[key] = decodeURIComponent(value || "");
+    });
+
+    return params;
+  }
+
+  // Get video URL and dimensions from query params
+  const params = getQueryParams();
+  const videoUrl = params['video_url'];
+  const width = params['width'] || '640';
+  const height = params['height'] || '360';
+
+  // Set video source and dimensions
+  const videoPlayer = document.getElementById('video-player');
+  const videoSource = document.getElementById('video-source');
+
+  if (videoUrl) {
+    videoSource.src = videoUrl;
+    videoPlayer.width = width;
+    videoPlayer.height = height;
+    videoPlayer.load(); // Reload the video with the new source
+  }
+</script>

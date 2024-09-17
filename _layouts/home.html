@@ -61,8 +61,8 @@ layout: page
 
       <div class="post-buttons">
         <a href="{{ post.publi_link }}" class="btn btn-primary" target="_blank">PDF</a>
-        {% if post.video_path%}
-          <a href="{{ post.video_path }}" class="btn btn-primary" target="_blank">Video</a>
+        {% if post.video_path %}
+          <a href="{{ site.baseurl }}/video-page/?video_url={{ post.video_path }}&width=640&height=360" class="btn btn-primary" target="_blank">Video</a>
         {% endif %}
       </div>
 
