@@ -103,7 +103,7 @@ hr.small {
   color: #367588;
   padding: 10px 20px;
   text-decoration: none;
-  font-size: 12px;
+  font-size: 14px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -1211,15 +1211,23 @@ pre {
 }
 
 .experience-section li, .education-section li, .other-section li {
-  font-size: 0.875rem;    /* Makes the text smaller (roughly equivalent to 14px) */
-  margin-bottom: 8px;     /* Adds space between list items */
-  color: #404040;         /* Gray text color for consistency */
+  margin-bottom: 10px;
 }
 
 .custom-link {
   color: inherit; /* Inherit the text color from the parent element */
   text-decoration: underline; /* Keep the underline */
+  font-size: 0.75rem;
+  color: #425257; /* Consistent color theme */
 }
+
+.custom-link-sbfe {
+  color: inherit; /* Inherit the text color from the parent element */
+  text-decoration: underline; /* Keep the underline */
+  color: #425257; /* Consistent color theme */
+}
+
+
 
 .custom-link:hover {
   color: inherit; /* Optional: keep the same color on hover */
