@@ -1242,7 +1242,3 @@ pre {
   justify-content: flex-start; /* Aligns items to the top */
   height: 100%; /* Ensures the div uses all available vertical space */
 }
-
-.row, .col-md-4 {
-  height: 100%;
-}
