@@ -1215,21 +1215,34 @@ pre {
 }
 
 .custom-link {
-  color: inherit; /* Inherit the text color from the parent element */
-  text-decoration: underline; /* Keep the underline */
+  text-decoration: none; /* Keep the underline */
   font-size: 0.75rem;
-  color: #425257; /* Consistent color theme */
+  color: #1a6075; /* Consistent color theme */
 }
 
 .custom-link-sbfe {
-  color: inherit; /* Inherit the text color from the parent element */
-  text-decoration: underline; /* Keep the underline */
-  color: #425257; /* Consistent color theme */
+  text-decoration: none; /* Keep the underline */
+  color: #1a6075; /* Consistent color theme */
 }
-
-
 
 .custom-link:hover {
   color: inherit; /* Optional: keep the same color on hover */
   text-decoration: underline; /* Keep the underline on hover */
+}
+
+.about-me {
+  font-size: 0.9rem; /* Adjusted font size */
+  line-height: 1.5; /* Optional: improves readability by adjusting line spacing */
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start; /* Aligns items to the top */
+  height: 100%; /* Ensures the div uses all available vertical space */
+}
+
+.row, .col-md-4 {
+  height: 100%;
 }
