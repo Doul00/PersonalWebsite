@@ -2,6 +2,9 @@
 layout: page
 ---
 
+
+{% include personal_info.html %}
+
 {{ content }}
 
 {% assign posts = paginator.posts | default: site.posts %}
