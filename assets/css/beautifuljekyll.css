@@ -1176,32 +1176,13 @@ pre {
   margin-bottom: 5px; /* Space between the name and the experience section */
 }
 
-/* Profile picture styling */
-.profile-picture {
-  flex: 0 0 100px; /* Reduce the fixed width (e.g., from 150px to 100px) */
-  text-align: center;
-  margin: 0 auto; /* Ensure it's centered within its container */
-}
-
-.profile-picture img {
-  width: 100%; /* This ensures the image scales with the container */
-  height: auto; /* Maintains the aspect ratio */
-  max-width: 175px; /* Ensures the image doesn't exceed the container size */
-  border-radius: 50%; /* Keeps the image circular */
-  margin-bottom: 15px;
-}
-.profile-picture .social-icons {
-  margin-top: 10px;
-}
-
 /* Experience and Education sections */
 .experience-section, .education-section {
   text-align: left; /* Aligns the text to the left side */
 }
 
-.experience-section h3, .education-section h3, .other-section h3 {
+.experience-section h2, .education-section h2, .other-section h2 {
   color: #367588; /* Consistent color theme */
-  font-size: 1.25rem;
   margin-bottom: 10px;
 }
 
@@ -1231,14 +1212,38 @@ pre {
 }
 
 .about-me {
-  font-size: 0.9rem; /* Adjusted font size */
+  font-size: 1.2rem; /* Adjusted font size */
   line-height: 1.5; /* Optional: improves readability by adjusting line spacing */
 }
 
 .profile-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
   justify-content: flex-start; /* Aligns items to the top */
-  height: 100%; /* Ensures the div uses all available vertical space */
+  height: 100%
 }
+
+/* Profile picture styling */
+.profile-picture {
+  flex: 0 0 100px; /* Reduce the fixed width (e.g., from 150px to 100px) */
+  text-align: center;
+  margin: 0 auto; /* Ensure it's centered within its container */
+}
+
+.profile-picture img {
+  width: 100%; /* This ensures the image scales with the container */
+  height: auto; /* Maintains the aspect ratio */
+  max-width: 175px; /* Ensures the image doesn't exceed the container size */
+  border-radius: 50%; /* Keeps the image circular */
+  margin-bottom: 15px;
+}
+.profile-picture .social-icons {
+  margin-top: 10px;
+}
+
+
+
+.other-section {
+  margin-top: 20px;
+}
+
