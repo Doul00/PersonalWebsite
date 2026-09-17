@@ -9,7 +9,8 @@ layout: portfolio
   <div class="photo-story-images">
     {% for photo in page.photos %}
     <figure>
-      <img src="{{ photo.image | relative_url | escape }}" alt="{{ photo.alt | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+      {% capture fallback_alt %}{{ page.title }} — photo {{ forloop.index }}{% endcapture %}
+      <img src="{{ photo.image | relative_url | escape }}" alt="{{ photo.alt | default: photo.caption | default: fallback_alt | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
       {% if photo.caption and photo.caption != '' %}
       <figcaption>{{ photo.caption | escape }}</figcaption>
       {% endif %}

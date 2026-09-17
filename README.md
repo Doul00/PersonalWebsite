@@ -13,8 +13,8 @@ Jekyll website hosted on GitHub Pages at https://abdoulazizamadou.com.
 1. Open https://github.com/settings/personal-access-tokens/new as the repository owner.
 2. Create a fine-grained token with an expiration, **only** the `PersonalWebsite` repository, and **Contents: Read and write** permission. Metadata read access is included automatically.
 3. Open https://abdoulazizamadou.com/login/ and choose **Sign In Using Access Token**. Paste it there, never into a chat or repository file.
-4. In **Photography sections**, create a **Section**. Enter its name and display order, then add photos and image descriptions. Captions are optional.
-5. Drag photos into the desired order. The first photo automatically becomes the cover.
+4. In **Photography sections**, create a **Section**. Enter its name and display order, then use **Upload photos** to select multiple photos at once, or **Choose existing photos** to select from the asset library. Each photo has an optional caption; no description is required.
+5. Use **Move up** and **Move down** to arrange photos. The first photo automatically becomes the cover. Removing a photo here removes it from the section, not from the asset library.
 6. Save/publish the section. GitHub Pages rebuilds the website; allow a short delay before the public page updates.
 
 GitHub checks write permissions on every save. Sveltia remembers sign-in using browser local storage; use your own device and sign out on shared devices. Renew expired tokens through GitHub.
