@@ -1,0 +1,25 @@
+---
+layout: portfolio
+title: Photography
+permalink: /photo/
+section: photography
+share-description: Photography by Abdoul Aziz Amadou.
+---
+
+<main class="photography" id="main-content">
+  <h1>Photography</h1>
+  {% assign sections = site.photo_sections | sort: 'order' %}
+  {% if sections.size > 0 %}
+  <div class="photo-sections">
+    {% for section in sections %}
+      {% assign cover = section.photos | first %}
+      {% if cover.image %}
+      <a class="photo-section-card" href="{{ section.url | relative_url }}">
+        <img src="{{ cover.image | relative_url | escape }}" alt="{{ cover.alt | default: section.title | escape }}" loading="lazy" decoding="async">
+        <h2>{{ section.title | escape }} <span aria-hidden="true">↗</span></h2>
+      </a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</main>

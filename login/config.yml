@@ -1,0 +1,62 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms@0.213.4/schema/sveltia-cms.json
+backend:
+  name: github
+  repo: Doul00/PersonalWebsite
+  branch: master
+  auth_methods: [token]
+site_url: https://abdoulazizamadou.com
+display_url: https://abdoulazizamadou.com/photo/
+app_title: Photography editor
+logout_redirect_url: https://abdoulazizamadou.com/photo/
+media_folder: assets/photos
+public_folder: /assets/photos
+media_libraries:
+  default:
+    config:
+      max_file_size: 15728640
+      slugify_filename: true
+collections:
+  - name: sections
+    label: Photography sections
+    label_singular: Section
+    folder: _photo_sections
+    create: true
+    extension: md
+    format: frontmatter
+    slug: "{{slug}}"
+    preview_path: "photo/{{slug}}/"
+    summary: "{{title}}"
+    fields:
+      - label: Section name
+        name: title
+        widget: string
+      - label: Display order
+        name: order
+        widget: number
+        value_type: int
+        min: 0
+        default: 0
+        hint: Lower numbers appear first on the photography page.
+      - label: Photos
+        label_singular: Photo
+        name: photos
+        widget: list
+        min: 1
+        collapsed: true
+        summary: "{{fields.alt}}"
+        hint: The first photo is the section cover. Drag photos to change their order.
+        fields:
+          - label: Photo
+            name: image
+            widget: image
+            choose_url: false
+            accept: image/jpeg,image/png,image/webp,image/avif
+            hint: Upload a JPEG, PNG, WebP or AVIF image, up to 15 MB.
+          - label: Image description
+            name: alt
+            widget: string
+            hint: Briefly describe the photo for screen readers.
+          - label: Caption
+            name: caption
+            widget: string
+            required: false

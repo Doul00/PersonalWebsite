@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="{{ page.language | default: site.language | default: 'en' }}">
+{% include head.html %}
+<body class="portfolio-page {{ page.section }}-page">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  {% include nav.html %}
+  {{ content }}
+</body>
+</html>

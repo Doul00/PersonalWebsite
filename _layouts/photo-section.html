@@ -1,0 +1,20 @@
+---
+layout: portfolio
+---
+<main class="photo-story" id="main-content">
+  <header class="photo-story-heading">
+    <a class="back-link" href="{{ '/photo/' | relative_url }}">← All photography</a>
+    <h1>{{ page.title | escape }}</h1>
+  </header>
+  <div class="photo-story-images">
+    {% for photo in page.photos %}
+    <figure>
+      <img src="{{ photo.image | relative_url | escape }}" alt="{{ photo.alt | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
+      {% if photo.caption and photo.caption != '' %}
+      <figcaption>{{ photo.caption | escape }}</figcaption>
+      {% endif %}
+    </figure>
+    {% endfor %}
+  </div>
+  <div class="photo-story-end"><a class="back-link" href="{{ '/photo/' | relative_url }}">← All photography</a></div>
+</main>
