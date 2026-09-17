@@ -12,10 +12,21 @@
   };
 
   const PhotoGallery = window.createClass({
+    photos: function () {
+      // Sveltia flattens arrays of objects in its draft store. Read the assembled
+      // entry data when available, since the custom field value can be [] even
+      // while photos.0.image and photos.0.caption exist in that store.
+      const entry = this.props.entry;
+      if (entry && typeof entry.getIn === "function") {
+        const photos = entry.getIn(["data", "photos"]);
+        if (photos !== undefined) return asPhotos(photos);
+      }
+      return asPhotos(this.props.value);
+    },
     getInitialState: function () { return { busy: false, message: "", error: "" }; },
     isValid: function () {
       if (this.state.busy) return { error: { message: "Wait for the photos to finish preparing." } };
-      return asPhotos(this.props.value).length > 0 || { error: { message: "Add at least one photo." } };
+      return this.photos().length > 0 || { error: { message: "Add at least one photo." } };
     },
     upload: async function (event) {
       const files = Array.from(event.target.files || []);
@@ -34,7 +45,7 @@
           failed.push(file.name + ": " + (error.message || "Could not add this photo."));
         }
       }
-      if (added.length) this.props.onChange(asPhotos(this.props.value).concat(added));
+      if (added.length) this.props.onChange(this.photos().concat(added));
       this.setState({
         busy: false,
         message: added.length + " photo(s) added. Save the section to publish.",
@@ -48,7 +59,7 @@
         const picked = await this.props.pickFile({ kind: "image", accept, multiple: true, allowURL: false });
         if (picked) {
           const added = (Array.isArray(picked) ? picked : [picked]).map(file => ({ image: file.value, caption: "" }));
-          this.props.onChange(asPhotos(this.props.value).concat(added));
+          this.props.onChange(this.photos().concat(added));
           this.setState({ message: added.length + " photo(s) added. Save the section to publish." });
         }
       } catch (error) {
@@ -58,19 +69,19 @@
       }
     },
     caption: function (index, caption) {
-      this.props.onChange(asPhotos(this.props.value).map((photo, i) => i === index ? { ...photo, caption } : photo));
+      this.props.onChange(this.photos().map((photo, i) => i === index ? { ...photo, caption } : photo));
     },
     move: function (index, direction) {
-      const photos = asPhotos(this.props.value).slice(), target = index + direction;
+      const photos = this.photos().slice(), target = index + direction;
       if (target < 0 || target >= photos.length) return;
       [photos[index], photos[target]] = [photos[target], photos[index]];
       this.props.onChange(photos);
     },
     remove: function (index) {
-      this.props.onChange(asPhotos(this.props.value).filter((photo, i) => i !== index));
+      this.props.onChange(this.photos().filter((photo, i) => i !== index));
     },
     render: function () {
-      const photos = asPhotos(this.props.value), busy = this.state.busy;
+      const photos = this.photos(), busy = this.state.busy;
       return h("div", { "aria-busy": busy },
         h("label", { htmlFor: this.props.forID, style: { display: "block", marginBottom: "8px", fontWeight: 600 } }, "Upload photos"),
         h("input", { id: this.props.forID, type: "file", multiple: true, accept, disabled: busy, onChange: this.upload,

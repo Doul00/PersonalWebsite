@@ -24,7 +24,8 @@ collections:
     extension: md
     format: frontmatter
     slug: "{{slug}}"
-    preview_path: "photo/{{slug}}/"
+    # GitHub Pages publishes asynchronously after saving. Wait at a stable URL.
+    preview_path: "photo/view/?section={{slug}}"
     summary: "{{title}}"
     fields:
       - label: Section name

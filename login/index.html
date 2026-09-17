@@ -11,13 +11,24 @@ sitemap: false
     <meta name="robots" content="noindex, nofollow">
     <meta name="referrer" content="same-origin">
     <title>Photography editor — Abdoul Aziz Amadou</title>
-    <link href="{{ '/login/config.yml' | relative_url }}" type="text/yaml" rel="cms-config-url">
+    <link href="{{ '/login/config.yml' | relative_url }}?v=2" type="text/yaml" rel="cms-config-url">
   </head>
   <body>
     <script>window.CMS_MANUAL_INIT = true;</script>
     <noscript>Enable JavaScript to sign in to the photography editor. <a href="{{ '/photo/' | relative_url }}">Return to photography</a>.</noscript>
     <script src="https://unpkg.com/@sveltia/cms@0.213.4/dist/sveltia-cms.js" integrity="sha384-+8RqGMj37Dk0jEygUTA0V4kuL33YKjEWS4c84G8OqXQZY6ceSHa/EbKkIhL4zIcT" crossorigin="anonymous"></script>
-    <script src="{{ '/login/photo-gallery.js' | relative_url }}"></script>
-    <script>CMS.init();</script>
+    <!-- Bundle the widget with this page: a separately cached/missing script must
+         never leave the CMS running with an unsupported field. -->
+    <script>{% include_relative photo-gallery.js %}</script>
+    <script>
+      if (window.CMS && CMS.getFieldType('photo-gallery')) {
+        CMS.init();
+      } else {
+        const message = document.createElement('p');
+        message.textContent = 'The photo editor could not load. Please reload this page before editing or saving.';
+        message.setAttribute('role', 'alert');
+        document.body.appendChild(message);
+      }
+    </script>
   </body>
 </html>

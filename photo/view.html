@@ -1,0 +1,49 @@
+---
+layout: portfolio
+title: Opening photography section
+section: photography
+permalink: /photo/view/
+sitemap: false
+---
+<main id="main-content" class="photo-section">
+  <h1>Opening your section</h1>
+  <p id="publish-status" role="status">Checking whether GitHub Pages has published your section…</p>
+  <p><button id="retry-publish" type="button" hidden>Check again</button></p>
+  <p><a href="{{ '/photo/' | relative_url }}">Back to photography</a></p>
+  <noscript>Enable JavaScript to check publication, or return to photography after the deployment finishes.</noscript>
+</main>
+<script>
+(function () {
+  'use strict';
+  const section = new URLSearchParams(location.search).get('section');
+  const status = document.getElementById('publish-status');
+  const retry = document.getElementById('retry-publish');
+  if (!section || section === '.' || section === '..' || /[\/\\?#]/.test(section)) {
+    status.textContent = 'No valid section was selected. Open the section from the editor or photography page.';
+    return;
+  }
+  const target = new URL({{ '/photo/' | relative_url | jsonify }} + encodeURIComponent(section) + '/', location.origin);
+  let attempts = 0;
+  async function check() {
+    retry.hidden = true;
+    attempts += 1;
+    try {
+      const response = await fetch(target, { method: 'HEAD', cache: 'no-store' });
+      if (response.ok) { location.replace(target.href); return; }
+      if (response.status !== 404) throw new Error('Publication check failed');
+      status.textContent = 'Your save is in GitHub. Pages may take a few minutes to publish it. This page will open the section when it is available.';
+    } catch (_) {
+      status.textContent = 'Could not check publication. Please check your connection and try again.';
+      retry.hidden = false;
+      return;
+    }
+    if (attempts < 24) { setTimeout(check, 5000); }
+    else {
+      status.textContent = 'The section is not available yet. If you saved it, check the Pages deployment in GitHub Actions, then try again.';
+      retry.hidden = false;
+    }
+  }
+  retry.addEventListener('click', function () { attempts = 0; check(); });
+  check();
+})();
+</script>
