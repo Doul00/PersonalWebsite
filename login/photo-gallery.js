@@ -24,9 +24,17 @@
       return asPhotos(this.props.value);
     },
     getInitialState: function () { return { busy: false, message: "", error: "" }; },
+    changePhotos: function (photos) {
+      // CMS validation runs before React receives the updated entry props.
+      this.validationSnapshot = { photos, entry: this.props.entry, value: this.props.value };
+      this.props.onChange(photos);
+    },
     isValid: function () {
       if (this.state.busy) return { error: { message: "Wait for the photos to finish preparing." } };
-      return this.photos().length > 0 || { error: { message: "Add at least one photo." } };
+      const snapshot = this.validationSnapshot;
+      const photos = snapshot && snapshot.entry === this.props.entry && snapshot.value === this.props.value
+        ? snapshot.photos : this.photos();
+      return photos.length > 0 || { error: { message: "Add at least one photo." } };
     },
     upload: async function (event) {
       const files = Array.from(event.target.files || []);
@@ -45,40 +53,45 @@
           failed.push(file.name + ": " + (error.message || "Could not add this photo."));
         }
       }
-      if (added.length) this.props.onChange(this.photos().concat(added));
+      const photos = this.photos().concat(added);
       this.setState({
         busy: false,
         message: added.length + " photo(s) added. Save the section to publish.",
         error: failed.join("\n")
+      }, () => {
+        // The CMS caches validation on draft changes, not React state changes.
+        // Clear busy before notifying it, including when every upload failed.
+        this.changePhotos(photos);
       });
     },
     choose: async function () {
       if (this.state.busy) return;
       this.setState({ busy: true, error: "", message: "" });
+      let photos = this.photos();
       try {
         const picked = await this.props.pickFile({ kind: "image", accept, multiple: true, allowURL: false });
         if (picked) {
           const added = (Array.isArray(picked) ? picked : [picked]).map(file => ({ image: file.value, caption: "" }));
-          this.props.onChange(this.photos().concat(added));
+          photos = photos.concat(added);
           this.setState({ message: added.length + " photo(s) added. Save the section to publish." });
         }
       } catch (error) {
         this.setState({ error: error.message || "Could not select photos." });
       } finally {
-        this.setState({ busy: false });
+        this.setState({ busy: false }, () => this.changePhotos(photos));
       }
     },
     caption: function (index, caption) {
-      this.props.onChange(this.photos().map((photo, i) => i === index ? { ...photo, caption } : photo));
+      this.changePhotos(this.photos().map((photo, i) => i === index ? { ...photo, caption } : photo));
     },
     move: function (index, direction) {
       const photos = this.photos().slice(), target = index + direction;
       if (target < 0 || target >= photos.length) return;
       [photos[index], photos[target]] = [photos[target], photos[index]];
-      this.props.onChange(photos);
+      this.changePhotos(photos);
     },
     remove: function (index) {
-      this.props.onChange(this.photos().filter((photo, i) => i !== index));
+      this.changePhotos(this.photos().filter((photo, i) => i !== index));
     },
     render: function () {
       const photos = this.photos(), busy = this.state.busy;
