@@ -5,8 +5,9 @@ const fs = require('node:fs');
 const vm = require('node:vm');
 const path = require('node:path');
 let definition;
+let confirmed = false;
 vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../login/photo-gallery.js'), 'utf8'), {
-  window: { h() {}, createClass: spec => spec, CMS: { registerFieldType: (_, spec) => { definition = spec; } } }
+  window: { confirm: () => confirmed, h() {}, createClass: spec => spec, CMS: { registerFieldType: (_, spec) => { definition = spec; } } }
 });
 function widget(initial = []) {
   const instance = { ...definition, state: definition.getInitialState() };
@@ -41,7 +42,8 @@ test('upload completion clears busy before caching validation, without another e
   assert.equal(c.props.value.length, 2);
   c.remove(1);
   c.remove(0);
-  assert.notEqual(c.cachedValidation, true);
+  assert.equal(c.cachedValidation, true);
+  assert.equal(c.props.value.length, 0);
 });
 test('picker completion, cancellation and errors reset busy and revalidate', async () => {
   for (const result of ['picked', 'cancelled', 'failed']) {
@@ -67,4 +69,15 @@ test('failed upload preserves existing photos and clears cached busy error', asy
   assert.equal(c.cachedValidation, true);
   assert.equal(c.props.value.length, 1);
   assert.match(c.state.error, /bad.txt/);
+});
+test('remove all requires confirmation, retains captions on cancellation and permits saving empty section', () => {
+  const c = widget([{ image: '/old.jpg', caption: 'Keep on cancellation' }]);
+  confirmed = false;
+  c.removeAll();
+  assert.equal(c.props.value[0].caption, 'Keep on cancellation');
+  confirmed = true;
+  c.removeAll();
+  c.flush();
+  assert.equal(c.props.value.length, 0);
+  assert.equal(c.isValid(), true);
 });

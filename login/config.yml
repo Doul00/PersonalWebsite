@@ -42,4 +42,5 @@ collections:
         label_singular: Photo
         name: photos
         widget: photo-gallery
+        required: false
         hint: Upload several photos together. Captions are optional. The first photo is the section cover.

@@ -15,6 +15,7 @@ sitemap: false
   </head>
   <body>
     <script>window.CMS_MANUAL_INIT = true;</script>
+    <script>{% include_relative r2-config.js %}</script>
     <script>{% include_relative github-upload.js %}</script>
     <script>{% include_relative upload-diagnostics.js %}</script>
     <noscript>Enable JavaScript to sign in to the photography editor. <a href="{{ '/photo/' | relative_url }}">Return to photography</a>.</noscript>
@@ -24,7 +25,9 @@ sitemap: false
     <script>{% include_relative photo-gallery.js %}</script>
     <script>
       if (window.CMS && CMS.getFieldType('photo-gallery')) {
-        CMS.init();
+        CMS.init(window.PHOTO_R2_CONFIG ? { config: {
+          media_libraries: { default: false, cloudflare_r2: window.PHOTO_R2_CONFIG }
+        } } : undefined);
       } else {
         const message = document.createElement('p');
         message.textContent = 'The photo editor could not load. Please reload this page before editing or saving.';

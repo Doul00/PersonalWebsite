@@ -25,16 +25,13 @@
     },
     getInitialState: function () { return { busy: false, message: "", error: "" }; },
     changePhotos: function (photos) {
-      // CMS validation runs before React receives the updated entry props.
-      this.validationSnapshot = { photos, entry: this.props.entry, value: this.props.value };
       this.props.onChange(photos);
     },
     isValid: function () {
       if (this.state.busy) return { error: { message: "Wait for the photos to finish preparing." } };
-      const snapshot = this.validationSnapshot;
-      const photos = snapshot && snapshot.entry === this.props.entry && snapshot.value === this.props.value
-        ? snapshot.photos : this.photos();
-      return photos.length > 0 || { error: { message: "Add at least one photo." } };
+      // Empty sections are valid: removing the final photo must be saveable.
+      // The public photography index hides sections without a cover photo.
+      return true;
     },
     upload: async function (event) {
       const files = Array.from(event.target.files || []);
@@ -92,14 +89,23 @@
     },
     remove: function (index) {
       this.changePhotos(this.photos().filter((photo, i) => i !== index));
+      this.setState({ message: "Photo removed from this section. Save to update the website. The uploaded file is still in Assets." });
+    },
+    removeAll: function () {
+      if (!window.confirm("Remove all photos from this section? Save afterwards to update the website. Uploaded files will remain in Assets.")) return;
+      this.changePhotos([]);
+      this.setState({ message: "All photos removed from this section. Save to update the website." });
     },
     render: function () {
       const photos = this.photos(), busy = this.state.busy;
       return h("div", { "aria-busy": busy },
-        h("label", { htmlFor: this.props.forID, style: { display: "block", marginBottom: "8px", fontWeight: 600 } }, "Upload photos"),
-        h("input", { id: this.props.forID, type: "file", multiple: true, accept, disabled: busy, onChange: this.upload,
+        !window.PHOTO_R2_CONFIG && h("label", { htmlFor: this.props.forID, style: { display: "block", marginBottom: "8px", fontWeight: 600 } }, "Upload photos"),
+        !window.PHOTO_R2_CONFIG && h("input", { id: this.props.forID, type: "file", multiple: true, accept, disabled: busy, onChange: this.upload,
           style: { display: "block", maxWidth: "100%", marginBottom: "12px" } }),
-        h("button", { type: "button", disabled: busy, onClick: this.choose, style: buttonStyle }, "Choose existing photos"),
+        h("button", { type: "button", disabled: busy, onClick: this.choose, style: buttonStyle }, window.PHOTO_R2_CONFIG ? "Upload or choose R2 photos" : "Choose existing photos"),
+        h("p", null, h("a", { href: "#/assets", target: "_blank", rel: "noopener" }, "Manage / delete uploaded assets")),
+        h("p", { style: { fontSize: "14px" } }, "To delete an uploaded file, first remove it from every section and save. Then select it in Assets and choose Delete. The asset library opens in a new tab."),
+        photos.length > 0 && h("button", { type: "button", disabled: busy, onClick: this.removeAll, style: buttonStyle }, "Remove all photos from section"),
         h("p", { role: "status", style: { fontSize: "14px" } }, this.state.message),
         this.state.error && h("p", { role: "alert", style: { color: "#bf3838", whiteSpace: "pre-wrap" } }, this.state.error),
         h("div", { style: { display: "grid", gap: "20px" } },
@@ -120,7 +126,7 @@
             h("button", { type: "button", style: buttonStyle, disabled: busy || index === photos.length - 1,
               onClick: () => this.move(index, 1), "aria-label": "Move photo " + (index + 1) + " down" }, "Move down"),
             h("button", { type: "button", style: buttonStyle, disabled: busy,
-              onClick: () => this.remove(index), "aria-label": "Remove photo " + (index + 1) }, "Remove")
+              onClick: () => this.remove(index), "aria-label": "Remove photo " + (index + 1) }, "Remove from section")
           )))
         )
       );

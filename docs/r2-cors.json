@@ -1,0 +1,9 @@
+[
+  {
+    "AllowedOrigins": ["https://abdoulazizamadou.com"],
+    "AllowedMethods": ["GET", "HEAD", "PUT", "DELETE"],
+    "AllowedHeaders": ["*"],
+    "ExposeHeaders": ["ETag"],
+    "MaxAgeSeconds": 3600
+  }
+]
