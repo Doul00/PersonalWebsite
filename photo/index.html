@@ -11,13 +11,16 @@ share-description: Photography by Abdoul Aziz Amadou.
   {% assign sections = site.photo_sections | sort: 'order' %}
   {% if sections.size > 0 %}
   <div class="photo-sections">
+    {% assign has_album = false %}
     {% for section in sections %}
       {% assign cover = section.photos | first %}
       {% if cover.image %}
+      {% if has_album %}<hr class="album-divider">{% endif %}
       <a class="photo-section-card" href="{{ section.url | relative_url }}">
-        <h2>{{ section.title | escape }} <span aria-hidden="true">↗</span></h2>
         <img src="{{ cover.image | relative_url | escape }}" alt="{{ cover.alt | default: section.title | escape }}" loading="lazy" decoding="async">
+        <h2>{{ section.title | escape }} <span aria-hidden="true">↗</span></h2>
       </a>
+      {% assign has_album = true %}
       {% endif %}
     {% endfor %}
   </div>
