@@ -15,8 +15,8 @@ share-description: Photography by Abdoul Aziz Amadou.
       {% assign cover = section.photos | first %}
       {% if cover.image %}
       <a class="photo-section-card" href="{{ section.url | relative_url }}">
-        <img src="{{ cover.image | relative_url | escape }}" alt="{{ cover.alt | default: section.title | escape }}" loading="lazy" decoding="async">
         <h2>{{ section.title | escape }} <span aria-hidden="true">↗</span></h2>
+        <img src="{{ cover.image | relative_url | escape }}" alt="{{ cover.alt | default: section.title | escape }}" loading="lazy" decoding="async">
       </a>
       {% endif %}
     {% endfor %}

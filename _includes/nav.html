@@ -8,4 +8,17 @@
     {% endfor %}
   </ul>
   {% endif %}
+  {% if page.section == 'photography' %}
+  {% assign albums = site.photo_sections | sort: 'order' %}
+  <details class="album-menu">
+    <summary>Albums</summary>
+    <ul class="album-menu-list" aria-label="Photography albums">
+      {% for album in albums %}
+      <li><a href="{{ album.url | relative_url | escape }}"{% if page.url == album.url %} aria-current="page"{% endif %}>{{ album.title | escape }}</a></li>
+      {% else %}
+      <li class="album-menu-empty">No albums yet</li>
+      {% endfor %}
+    </ul>
+  </details>
+  {% endif %}
 </nav>
