@@ -1,9 +1,11 @@
 <nav class="navbar site-nav" aria-label="Main navigation">
   <a class="site-name" href="{{ '/' | relative_url }}" aria-label="Abdoul Aziz Amadou — home">Abdoul Aziz Amadou<span aria-hidden="true">.</span></a>
+  {% if page.url == '/' %}
   <ul class="site-tabs">
     {% for link in site.navbar-links %}
       {% assign section = link[0] | downcase %}
       <li><a href="{{ link[1] | relative_url }}"{% if page.section == section %} aria-current="page"{% endif %}>{{ link[0] }}</a></li>
     {% endfor %}
   </ul>
+  {% endif %}
 </nav>
