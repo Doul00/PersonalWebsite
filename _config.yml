@@ -19,10 +19,6 @@ author: ""
 # --- List of links in the navigation bar --- #
 ###############################################
 
-navbar-links:
-  Research: "/research/"
-  Photography: "/photo/"
-
 ################
 # --- Logo --- #
 ################
