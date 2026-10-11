@@ -3,7 +3,7 @@ title: 2026 Notting Hill Carnival
 order: 0
 photos:
   - caption: ''
-    image: /assets/photos/img_2012.jpeg
+    image: https://photos.abdoulazizamadou.com/assets/photos/IMG_2012.jpg
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/IMG_2014.jpeg
   - caption: ''
@@ -14,4 +14,6 @@ photos:
     image: https://photos.abdoulazizamadou.com/assets/photos/IMG_2016.jpeg
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/IMG_2019.jpeg
+  - caption: ''
+    image: https://photos.abdoulazizamadou.com/assets/photos/IMG_2020.JPG
 ---
