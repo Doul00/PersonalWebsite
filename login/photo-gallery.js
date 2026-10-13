@@ -1,5 +1,5 @@
-/* Batch photo editor. Keep originals for gallery pages and derive compact
- * 4:3 WebP covers for the photography index.
+/* Batch photo editor. Keep originals for gallery pages and derive compact,
+ * uncropped WebP covers for the photography index.
  */
 (function () {
   "use strict";
@@ -7,7 +7,6 @@
   const accept = "image/jpeg,image/png,image/webp,image/avif";
   const maxFileSize = 15728640;
   const coverWidth = 1200;
-  const coverRatio = 4 / 3;
   const coverQuality = 0.82;
   const buttonStyle = { padding: "10px 12px", minHeight: "44px", cursor: "pointer" };
   const asPhotos = value => {
@@ -20,20 +19,12 @@
   const createCover = async file => {
     const bitmap = await createImageBitmap(file);
     try {
-      let sx = 0, sy = 0, sw = bitmap.width, sh = bitmap.height;
-      if (sw / sh > coverRatio) {
-        sw = sh * coverRatio;
-        sx = (bitmap.width - sw) / 2;
-      } else {
-        sh = sw / coverRatio;
-        sy = (bitmap.height - sh) / 2;
-      }
-      const width = Math.min(coverWidth, Math.round(sw));
-      const height = Math.round(width / coverRatio);
+      const width = Math.min(coverWidth, bitmap.width);
+      const height = Math.round(bitmap.height * width / bitmap.width);
       const canvas = document.createElement("canvas");
       canvas.width = width;
       canvas.height = height;
-      canvas.getContext("2d").drawImage(bitmap, sx, sy, sw, sh, 0, 0, width, height);
+      canvas.getContext("2d").drawImage(bitmap, 0, 0, width, height);
       const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/webp", coverQuality));
       if (!blob) throw new Error("This browser could not create the WebP cover.");
       return blob;
@@ -167,9 +158,9 @@
         !window.PHOTO_R2_CONFIG && h("input", { id: this.props.forID, type: "file", multiple: true, accept, disabled: busy, onChange: this.upload,
           style: { display: "block", maxWidth: "100%", marginBottom: "12px" } }),
         h("button", { type: "button", disabled: busy, onClick: this.choose, style: buttonStyle }, window.PHOTO_R2_CONFIG ? "Upload or choose R2 photos" : "Choose existing photos"),
-        photos.length > 0 && !photos[0].thumbnail && h("button", { type: "button", disabled: busy, onClick: this.optimizeCover,
-          style: { ...buttonStyle, marginLeft: "8px" } }, "Generate cover thumbnail"),
-        h("p", { style: { fontSize: "14px" } }, "New uploads keep the full original and generate a 1200 × 900 WebP cover. Existing galleries can use Generate cover thumbnail."),
+        photos.length > 0 && h("button", { type: "button", disabled: busy, onClick: this.optimizeCover,
+          style: { ...buttonStyle, marginLeft: "8px" } }, photos[0].thumbnail ? "Regenerate cover thumbnail" : "Generate cover thumbnail"),
+        h("p", { style: { fontSize: "14px" } }, "New uploads keep the full original and generate an uncropped WebP cover up to 1200 px wide. Existing covers can be regenerated at any time."),
         h("p", null, h("a", { href: "#/assets", target: "_blank", rel: "noopener" }, "Manage / delete uploaded assets")),
         h("p", { style: { fontSize: "14px" } }, "To delete an uploaded file, first remove it from every section and save. Then select it in Assets and choose Delete. The asset library opens in a new tab."),
         photos.length > 0 && h("button", { type: "button", disabled: busy, onClick: this.removeAll, style: buttonStyle }, "Remove all photos from section"),
