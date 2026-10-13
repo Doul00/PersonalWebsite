@@ -1,6 +1,6 @@
 ---
+order: 3
 title: Notting Hill Carnival
-order: 0
 photos:
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/IMG_2012.jpg
