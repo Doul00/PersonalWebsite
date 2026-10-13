@@ -6,8 +6,9 @@ const vm = require('node:vm');
 const path = require('node:path');
 let definition;
 let confirmed = false;
+let drawImageArgs;
 const canvas = {
-  getContext: () => ({ drawImage() {} }),
+  getContext: () => ({ drawImage(...args) { drawImageArgs = args; } }),
   toBlob: callback => callback({ type: 'image/webp', size: 123 })
 };
 vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../login/photo-gallery.js'), 'utf8'), {
@@ -49,6 +50,7 @@ test('upload completion creates derived covers and clears busy before validation
   assert.equal(c.cachedValidation, true);
   assert.equal(c.props.value.length, 2);
   assert.equal(c.props.value[0].thumbnail, 'blob:a-cover.webp');
+  assert.equal(drawImageArgs.length, 5, 'thumbnail resizes the whole image instead of cropping it');
   c.remove(1);
   c.remove(0);
   assert.equal(c.cachedValidation, true);
