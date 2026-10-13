@@ -12,7 +12,6 @@ layout: portfolio
       {% capture fallback_alt %}{{ page.title }} — photo {{ forloop.index }}{% endcapture %}
       <button class="photo-lightbox-trigger" type="button"
         data-lightbox-src="{{ photo.image | relative_url | escape }}"
-        data-lightbox-caption="{{ photo.caption | default: '' | escape }}"
         aria-label="Open photo {{ forloop.index }} in image viewer">
         <img src="{{ photo.image | relative_url | escape }}" alt="{{ photo.alt | default: photo.caption | default: fallback_alt | escape }}" {% if forloop.first %}fetchpriority="high"{% else %}loading="lazy"{% endif %} decoding="async">
       </button>
@@ -25,23 +24,10 @@ layout: portfolio
   <div class="photo-story-end"><a class="back-link" href="{{ '/photo/' | relative_url }}">← All photography</a></div>
 </main>
 
-<dialog class="photo-lightbox" id="photo-lightbox" aria-label="Image viewer">
-  <div class="photo-lightbox-shell">
-    <div class="photo-lightbox-toolbar">
-      <button type="button" data-lightbox-close>Close</button>
-      <div class="photo-lightbox-zoom" aria-label="Zoom controls">
-        <button type="button" data-zoom-out aria-label="Zoom out">−</button>
-        <output data-zoom-output aria-live="polite">100%</output>
-        <button type="button" data-zoom-in aria-label="Zoom in">+</button>
-        <button type="button" data-zoom-reset>Fit</button>
-      </div>
-    </div>
-    <div class="photo-lightbox-viewport">
-      <div class="photo-lightbox-stage">
-        <img class="photo-lightbox-image" alt="">
-      </div>
-    </div>
-    <p class="photo-lightbox-caption" hidden></p>
+<div class="photo-lightbox" id="photo-lightbox" role="dialog" aria-modal="true" aria-label="Image viewer" aria-hidden="true" hidden>
+  <button class="photo-lightbox-close" type="button" data-lightbox-close aria-label="Close image viewer">×</button>
+  <div class="photo-lightbox-viewport">
+    <img class="photo-lightbox-image" alt="">
   </div>
-</dialog>
+</div>
 <script src="{{ '/assets/js/photo-lightbox.js' | relative_url }}" defer></script>
