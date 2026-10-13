@@ -1,14 +1,45 @@
-/* Batch photo editor. Keep the existing [{ image, caption }] content format.
- * Sveltia owns authentication, file validation, uploads and publication.
+/* Batch photo editor. Keep originals for gallery pages and derive compact
+ * 4:3 WebP covers for the photography index.
  */
 (function () {
   "use strict";
   const h = window.h;
   const accept = "image/jpeg,image/png,image/webp,image/avif";
+  const maxFileSize = 15728640;
+  const coverWidth = 1200;
+  const coverRatio = 4 / 3;
+  const coverQuality = 0.82;
   const buttonStyle = { padding: "10px 12px", minHeight: "44px", cursor: "pointer" };
   const asPhotos = value => {
     const photos = value && typeof value.toJS === "function" ? value.toJS() : value;
     return Array.isArray(photos) ? photos : [];
+  };
+  const fileName = (file, value) => file.name || decodeURIComponent(String(value || "image").split(/[?#]/)[0].split("/").pop());
+  const coverName = (file, value) => fileName(file, value).replace(/\.[^.]+$/, "") + "-cover.webp";
+
+  const createCover = async file => {
+    const bitmap = await createImageBitmap(file);
+    try {
+      let sx = 0, sy = 0, sw = bitmap.width, sh = bitmap.height;
+      if (sw / sh > coverRatio) {
+        sw = sh * coverRatio;
+        sx = (bitmap.width - sw) / 2;
+      } else {
+        sh = sw / coverRatio;
+        sy = (bitmap.height - sh) / 2;
+      }
+      const width = Math.min(coverWidth, Math.round(sw));
+      const height = Math.round(width / coverRatio);
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext("2d").drawImage(bitmap, sx, sy, sw, sh, 0, 0, width, height);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, "image/webp", coverQuality));
+      if (!blob) throw new Error("This browser could not create the WebP cover.");
+      return blob;
+    } finally {
+      if (typeof bitmap.close === "function") bitmap.close();
+    }
   };
 
   const PhotoGallery = window.createClass({
@@ -33,19 +64,25 @@
       // The public photography index hides sections without a cover photo.
       return true;
     },
+    addPhoto: async function (original, file) {
+      if (!file) throw new Error("The image bytes could not be read. Download the image and upload it again.");
+      const coverBlob = await createCover(file);
+      const thumbnail = await this.props.addFile(coverBlob, { name: coverName(file, original) });
+      return { image: original, thumbnail, caption: "" };
+    },
     upload: async function (event) {
       const files = Array.from(event.target.files || []);
       event.target.value = "";
       if (!files.length || this.state.busy) return;
-      this.setState({ busy: true, message: "Preparing photos…", error: "" });
+      this.setState({ busy: true, message: "Preparing photos and optimized covers…", error: "" });
       const added = [], failed = [];
       // Process sequentially to avoid decoding many large photos at once on phones.
       for (const file of files) {
         try {
           if (!accept.split(",").includes(file.type)) throw new Error("Use JPEG, PNG, WebP or AVIF.");
-          if (file.size > 15728640) throw new Error("The maximum size is 15 MB per photo.");
+          if (file.size > maxFileSize) throw new Error("The maximum size is 15 MB per photo.");
           const image = await this.props.addFile(file);
-          added.push({ image, caption: "" });
+          added.push(await this.addPhoto(image, file));
         } catch (error) {
           failed.push(file.name + ": " + (error.message || "Could not add this photo."));
         }
@@ -53,7 +90,7 @@
       const photos = this.photos().concat(added);
       this.setState({
         busy: false,
-        message: added.length + " photo(s) added. Save the section to publish.",
+        message: added.length + " photo(s) added with optimized covers. Save the section to publish.",
         error: failed.join("\n")
       }, () => {
         // The CMS caches validation on draft changes, not React state changes.
@@ -63,19 +100,46 @@
     },
     choose: async function () {
       if (this.state.busy) return;
-      this.setState({ busy: true, error: "", message: "" });
+      this.setState({ busy: true, error: "", message: "Preparing photos and optimized covers…" });
       let photos = this.photos();
+      const failed = [];
       try {
         const picked = await this.props.pickFile({ kind: "image", accept, multiple: true, allowURL: false });
         if (picked) {
-          const added = (Array.isArray(picked) ? picked : [picked]).map(file => ({ image: file.value, caption: "" }));
+          const selected = Array.isArray(picked) ? picked : [picked];
+          const added = [];
+          for (const item of selected) {
+            try {
+              added.push(await this.addPhoto(item.value, item.file));
+            } catch (error) {
+              failed.push(fileName(item.file || {}, item.value) + ": " + (error.message || "Could not prepare this photo."));
+            }
+          }
           photos = photos.concat(added);
-          this.setState({ message: added.length + " photo(s) added. Save the section to publish." });
+          this.setState({ message: added.length + " photo(s) added with optimized covers. Save the section to publish." });
         }
       } catch (error) {
-        this.setState({ error: error.message || "Could not select photos." });
+        failed.push(error.message || "Could not select photos.");
       } finally {
-        this.setState({ busy: false }, () => this.changePhotos(photos));
+        this.setState({ busy: false, error: failed.join("\n") }, () => this.changePhotos(photos));
+      }
+    },
+    optimizeCover: async function () {
+      if (this.state.busy) return;
+      const photos = this.photos();
+      const cover = photos[0];
+      if (!cover || !cover.image) return;
+      this.setState({ busy: true, message: "Generating optimized cover…", error: "" });
+      try {
+        const asset = this.props.getAsset && this.props.getAsset(cover.image);
+        const response = await fetch(asset && asset.url ? asset.url : cover.image, { mode: "cors" });
+        if (!response.ok) throw new Error("Could not download the current cover (HTTP " + response.status + ").");
+        const file = await response.blob();
+        const thumbnail = await this.props.addFile(await createCover(file), { name: coverName(file, cover.image) });
+        photos[0] = { ...cover, thumbnail };
+        this.setState({ busy: false, message: "Optimized cover generated. Save the section to publish." }, () => this.changePhotos(photos));
+      } catch (error) {
+        this.setState({ busy: false, error: error.message || "Could not generate the optimized cover.", message: "" }, () => this.changePhotos(photos));
       }
     },
     caption: function (index, caption) {
@@ -89,7 +153,7 @@
     },
     remove: function (index) {
       this.changePhotos(this.photos().filter((photo, i) => i !== index));
-      this.setState({ message: "Photo removed from this section. Save to update the website. The uploaded file is still in Assets." });
+      this.setState({ message: "Photo removed from this section. Save to update the website. The uploaded files are still in Assets." });
     },
     removeAll: function () {
       if (!window.confirm("Remove all photos from this section? Save afterwards to update the website. Uploaded files will remain in Assets.")) return;
@@ -103,6 +167,9 @@
         !window.PHOTO_R2_CONFIG && h("input", { id: this.props.forID, type: "file", multiple: true, accept, disabled: busy, onChange: this.upload,
           style: { display: "block", maxWidth: "100%", marginBottom: "12px" } }),
         h("button", { type: "button", disabled: busy, onClick: this.choose, style: buttonStyle }, window.PHOTO_R2_CONFIG ? "Upload or choose R2 photos" : "Choose existing photos"),
+        photos.length > 0 && !photos[0].thumbnail && h("button", { type: "button", disabled: busy, onClick: this.optimizeCover,
+          style: { ...buttonStyle, marginLeft: "8px" } }, "Generate cover thumbnail"),
+        h("p", { style: { fontSize: "14px" } }, "New uploads keep the full original and generate a 1200 × 900 WebP cover. Existing galleries can use Generate cover thumbnail."),
         h("p", null, h("a", { href: "#/assets", target: "_blank", rel: "noopener" }, "Manage / delete uploaded assets")),
         h("p", { style: { fontSize: "14px" } }, "To delete an uploaded file, first remove it from every section and save. Then select it in Assets and choose Delete. The asset library opens in a new tab."),
         photos.length > 0 && h("button", { type: "button", disabled: busy, onClick: this.removeAll, style: buttonStyle }, "Remove all photos from section"),
@@ -114,7 +181,7 @@
             style: { border: "1px solid #999", borderRadius: "6px", padding: "12px", minWidth: 0 }
           },
           h("p", { style: { margin: "0 0 8px", fontWeight: 600 } }, index === 0 ? "Photo 1 · Section cover" : "Photo " + (index + 1)),
-          h("img", { src: photo.image, alt: photo.caption || "Photo " + (index + 1), loading: "lazy",
+          h("img", { src: photo.thumbnail || photo.image, alt: photo.caption || "Photo " + (index + 1), loading: "lazy",
             style: { display: "block", maxWidth: "100%", maxHeight: "220px", marginBottom: "12px" } }),
           h("label", { htmlFor: this.props.forID + "-caption-" + index }, "Caption (optional)"),
           h("input", { id: this.props.forID + "-caption-" + index, type: "text", value: photo.caption || "", disabled: busy,
