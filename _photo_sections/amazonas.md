@@ -1,6 +1,6 @@
 ---
-title: Amazonas
 order: 0
+title: Amazonas
 photos:
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/Amazonas/000078360004.jpg
