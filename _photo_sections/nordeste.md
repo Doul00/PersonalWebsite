@@ -1,17 +1,13 @@
 ---
-title: Nordeste
 order: 0
+title: Nordeste
 photos:
-  - caption: ''
-    image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078340027.jpg
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078330008.jpg
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078330009.jpg
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078340007.jpg
-  - caption: ''
-    image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078350006.jpg
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078330032.jpg
   - caption: ''
