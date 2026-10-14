@@ -7,6 +7,7 @@ const path = require('node:path');
 let definition;
 let confirmed = false;
 let drawImageArgs;
+let fetchedURL;
 const canvas = {
   getContext: () => ({ drawImage(...args) { drawImageArgs = args; } }),
   toBlob: callback => callback({ type: 'image/webp', size: 123 })
@@ -15,7 +16,10 @@ vm.runInNewContext(fs.readFileSync(path.join(__dirname, '../login/photo-gallery.
   window: { confirm: () => confirmed, h() {}, createClass: spec => spec, CMS: { registerFieldType: (_, spec) => { definition = spec; } } },
   document: { createElement: () => canvas },
   createImageBitmap: async () => ({ width: 2400, height: 1600, close() {} }),
-  fetch: async () => ({ ok: true, blob: async () => ({ type: 'image/jpeg', name: 'existing.jpg' }) })
+  fetch: async url => {
+    fetchedURL = url;
+    return { ok: true, blob: async () => ({ type: 'image/jpeg', name: 'existing.jpg' }) };
+  }
 });
 function widget(initial = []) {
   const instance = { ...definition, state: definition.getInitialState() };
@@ -75,6 +79,7 @@ test('picker creates thumbnails, while cancellation and errors reset busy', asyn
 });
 test('picker downloads bytes for an existing R2 asset when no File is supplied', async () => {
   const c = widget();
+  c.props.getAsset = () => ({ url: 'blob:stale-preview' });
   c.props.pickFile = async () => [{ value: 'https://photos.example/remote.jpg' }];
   const picking = c.choose();
   c.flush();
@@ -84,6 +89,7 @@ test('picker downloads bytes for an existing R2 asset when no File is supplied',
   assert.equal(c.props.value.length, 1);
   assert.equal(c.props.value[0].image, 'https://photos.example/remote.jpg');
   assert.equal(c.props.value[0].thumbnail, 'blob:existing-cover.webp');
+  assert.equal(fetchedURL, 'https://photos.example/remote.jpg');
 });
 test('existing gallery can generate an optimized cover without replacing original', async () => {
   const c = widget([{ image: 'https://photos.example/existing.jpg', caption: 'Keep' }]);
