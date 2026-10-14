@@ -17,7 +17,10 @@ share-description: Photography by Abdoul Aziz Amadou.
       {% if cover.image %}
       {% if has_album %}<hr class="album-divider">{% endif %}
       <a class="photo-section-card" href="{{ section.url | relative_url }}">
-        <img src="{{ cover.thumbnail | default: cover.image | relative_url | escape }}" alt="{{ cover.alt | default: section.title | escape }}" loading="lazy" decoding="async">
+        {% assign cover_src = cover.thumbnail | default: cover.image %}
+        <img src="{{ cover_src | relative_url | append: '?v=' | append: site.github.build_revision | escape }}"
+             alt="{{ cover.alt | default: section.title | escape }}" loading="lazy" decoding="async"
+             onerror="this.onerror=null;this.src='{{ cover.image | relative_url | escape }}';">
         <h2>{{ section.title | escape }} <span aria-hidden="true">↗</span></h2>
       </a>
       {% assign has_album = true %}
