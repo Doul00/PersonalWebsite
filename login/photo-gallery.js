@@ -58,12 +58,17 @@
     imageBytes: async function (original, file) {
       if (file) return file;
       const asset = this.props.getAsset && this.props.getAsset(original);
-      const source = asset && asset.url ? asset.url : original;
+      // For cloud assets, prefer the durable public URL stored in the entry.
+      // getAsset() can return a temporary/revoked blob URL used by the preview.
+      const source = typeof original === "string" && /^https?:\/\//i.test(original)
+        ? original
+        : asset && asset.url ? asset.url : original;
       let response;
       try {
-        response = await fetch(source, { mode: "cors" });
+        response = await fetch(source, { mode: "cors", cache: "no-store", credentials: "omit" });
       } catch (error) {
-        throw new Error("Could not download this image from storage. Check the R2 CORS settings and try again.");
+        const origin = window.location && window.location.origin ? window.location.origin : "this editor";
+        throw new Error("Could not download " + source + " from " + origin + ". " + (error.message || "The browser blocked the request."));
       }
       if (!response.ok) throw new Error("Could not download this image from storage (HTTP " + response.status + ").");
       return response.blob();
