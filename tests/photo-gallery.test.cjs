@@ -73,6 +73,18 @@ test('picker creates thumbnails, while cancellation and errors reset busy', asyn
     if (result === 'picked') assert.equal(c.props.value[1].thumbnail, 'blob:new-cover.webp');
   }
 });
+test('picker downloads bytes for an existing R2 asset when no File is supplied', async () => {
+  const c = widget();
+  c.props.pickFile = async () => [{ value: 'https://photos.example/remote.jpg' }];
+  const picking = c.choose();
+  c.flush();
+  await picking;
+  c.flush();
+  assert.equal(c.state.error, '');
+  assert.equal(c.props.value.length, 1);
+  assert.equal(c.props.value[0].image, 'https://photos.example/remote.jpg');
+  assert.equal(c.props.value[0].thumbnail, 'blob:existing-cover.webp');
+});
 test('existing gallery can generate an optimized cover without replacing original', async () => {
   const c = widget([{ image: 'https://photos.example/existing.jpg', caption: 'Keep' }]);
   const optimizing = c.optimizeCover();
