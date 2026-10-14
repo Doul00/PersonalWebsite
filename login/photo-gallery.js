@@ -55,10 +55,23 @@
       // The public photography index hides sections without a cover photo.
       return true;
     },
+    imageBytes: async function (original, file) {
+      if (file) return file;
+      const asset = this.props.getAsset && this.props.getAsset(original);
+      const source = asset && asset.url ? asset.url : original;
+      let response;
+      try {
+        response = await fetch(source, { mode: "cors" });
+      } catch (error) {
+        throw new Error("Could not download this image from storage. Check the R2 CORS settings and try again.");
+      }
+      if (!response.ok) throw new Error("Could not download this image from storage (HTTP " + response.status + ").");
+      return response.blob();
+    },
     addPhoto: async function (original, file) {
-      if (!file) throw new Error("The image bytes could not be read. Download the image and upload it again.");
-      const coverBlob = await createCover(file);
-      const thumbnail = await this.props.addFile(coverBlob, { name: coverName(file, original) });
+      const bytes = await this.imageBytes(original, file);
+      const coverBlob = await createCover(bytes);
+      const thumbnail = await this.props.addFile(coverBlob, { name: coverName(bytes, original) });
       return { image: original, thumbnail, caption: "" };
     },
     upload: async function (event) {
