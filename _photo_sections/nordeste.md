@@ -15,9 +15,12 @@ photos:
     image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078330031.jpg
     thumbnail: /assets/photos/000078330031-cover.webp
   - caption: ''
-    image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078340007.jpg
-    thumbnail: /assets/photos/000078340007-cover.webp
-  - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078330032.jpg
     thumbnail: /assets/photos/000078330032-cover.webp
+  - caption: ''
+    image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078330023.jpg
+    thumbnail: /assets/photos/000078330023-cover.webp
+  - caption: ''
+    image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078340007.jpg
+    thumbnail: /assets/photos/000078340007-cover.webp
 ---
