@@ -1,6 +1,6 @@
 ---
 order: 0
-title: Nordeste
+title: Brazil - Nordeste
 photos:
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078340027.jpg
