@@ -23,4 +23,10 @@ photos:
   - caption: ''
     image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078340007.jpg
     thumbnail: /assets/photos/000078340007-cover.webp
+  - caption: ''
+    image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078330018.jpg
+    thumbnail: /assets/photos/000078330018-cover.webp
+  - caption: ''
+    image: https://photos.abdoulazizamadou.com/assets/photos/Nordeste/000078340026.jpg
+    thumbnail: /assets/photos/000078340026-cover.webp
 ---
