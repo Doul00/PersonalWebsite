@@ -128,7 +128,7 @@
 .photo-story h1 { margin: 32px 0 0; font-size: clamp(36px, 5vw, 72px); line-height: 1.15; font-weight: 400; letter-spacing: -0.05em; overflow-wrap: anywhere; }
 .back-link { color: #595d56; font-size: 14px; text-decoration: none; }
 .back-link:hover { color: #242723; text-decoration: underline; text-underline-offset: 5px; }
-.photo-story-images { display: grid; gap: 144px; }
+.photo-story-images { display: grid; width: 83.3333333333%; margin-inline: auto; gap: 288px; }
 .photo-story-images figure { margin: 0; }
 .photo-story-images img { display: block; width: 100%; height: auto; }
 .photo-story-images figcaption { padding: 16px clamp(24px, 5vw, 80px) 0; font-size: 14px; line-height: 1.6; color: #595d56; }
@@ -148,7 +148,7 @@
 }
 @media (max-width: 640px) {
   .photo-sections { grid-template-columns: 1fr; gap: 40px; margin-top: 40px; }
-  .photo-story-images { gap: 72px; }
+  .photo-story-images { gap: 144px; }
 }
 
 /* Full-screen gallery viewer. */
