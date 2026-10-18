@@ -85,7 +85,8 @@
   letter-spacing: -0.065em;
 }
 .landing h1 span { color: #717a6b; }
-.landing-actions { display: flex; flex-wrap: wrap; gap: 16px; margin-top: clamp(40px, 6vw, 72px); }
+.landing-actions { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); row-gap: 16px; margin-top: clamp(40px, 6vw, 72px); }
+.landing-actions .entry-button { grid-column: 1 / span 4; min-width: 0; }
 .entry-button {
   display: flex;
   align-items: center;
@@ -108,7 +109,7 @@
   .site-nav { padding-top: 16px; padding-bottom: 12px; gap: 8px; }
   .site-nav .site-name { flex-basis: 100%; }
   .site-tabs { gap: 28px; }
-  .landing-actions { flex-direction: column; }
+  .landing-actions .entry-button { grid-column: 1 / -1; }
   .entry-button { width: 100%; }
 }
 @media (prefers-reduced-motion: reduce) {
